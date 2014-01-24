@@ -64,6 +64,7 @@
         ,   thumbSize       = 0
         ,   thumbPosition   = 0
         ,   mousePosition   = 0
+        ,   trackHeight     = 0
 
         ,   isHorizontal   = options.axis === 'x'
         ,   hasTouchEvents = "ontouchstart" in document.documentElement
@@ -186,12 +187,25 @@
                 contentPosition = Math.min((contentSize - viewportSize), Math.max(0, contentPosition));
 
                 $thumb.css(posiLabel, contentPosition / trackRatio);
-                $overview.css(posiLabel, -contentPosition);
 
+                trackHeight = contentSize - viewportSize;
+
+                $overview.css(posiLabel, -contentPosition);
+                
                 if(options.wheelLock || (contentPosition !== (contentSize - viewportSize) && contentPosition !== 0))
                 {
                     eventObject = $.event.fix(eventObject);
                     eventObject.preventDefault();
+                }
+
+                // console.log('position is: ' + contentPosition);
+                // console.log('total height is: ' + trackHeight);
+
+                if (contentPosition > trackHeight / 2) {
+                    $thumb.css('background-position', '-78px 1px');
+                }
+                else{
+                    $thumb.css('background-position', '-107px 1px');
                 }
             }
         }
@@ -202,17 +216,29 @@
             {
                 mousePositionNew   = isHorizontal ? event.pageX : event.pageY;
                 thumbPositionDelta = mousePositionNew - mousePosition;
-
+ 
                 if(options.scrollInvert)
                 {
                     thumbPositionDelta = mousePosition - mousePositionNew;
                 }
+
+                trackHeight = contentSize - viewportSize;
 
                 thumbPositionNew = Math.min((trackSize - thumbSize), Math.max(0, thumbPosition + thumbPositionDelta));
                 contentPosition  = thumbPositionNew * trackRatio;
 
                 $thumb.css(posiLabel, thumbPositionNew);
                 $overview.css(posiLabel, -contentPosition);
+
+                // console.log('position is: ' + contentPosition);
+                // console.log('total height is: ' + trackSize);
+
+                if (contentPosition > trackHeight / 2) {
+                    $thumb.css('background-position', '-78px 1px');
+                }
+                else{
+                    $thumb.css('background-position', '-107px 1px');
+                }
             }
         }
 
